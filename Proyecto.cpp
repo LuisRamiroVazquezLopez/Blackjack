@@ -1,144 +1,109 @@
-//Librerias a usar
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
-#include <string>
-#include <iomanip>  //para mejor formato
-#include <fstream>
+#include <cstring>
 
 using namespace std;
 
-enum Palo{CORAZONES=1, DIAMANTES=2, TREBOLES=3, PICAS=4};
-
 struct Carta{
-    int valor;
-    Palo palo;
-    string nombre; 
+    char figura[10];
+    char valor[2];
+    int puntos;
 };
 
 struct Jugador{
-    Carta* manoJugador;
-    int totCartas;
-    int puntaje;
-    string nombre;
+    Carta* juego;
+    int numDeCar;
+    int total;
+    char nombre[30];
 };
-
-
-//funcion para crear la baraja de cartas
-Carta* crearBaraja();
-void revolverBaraja(Carta* baraja);
-void repartirCartas(Jugador* jugador, Carta* baraja);
+void crearJugador(Jugador* jugador, const char* nombre);
+int valorCarta(const char* valor, Jugador* jugador);
+Carta generarCarta(Jugador* jugador);
+void agregarCarta(Jugador* jugador, Carta carta);
+void mostrarMano(Jugador* jugador);
+void turnoJugador(Jugador* jugador);
 
 int main(){
-    srand(time(NULL));
-
-    Carta* baraja = crearBaraja();
-
-    
-    revolverBaraja(baraja);
-
-    //se crea la instancia para la banca
-    Jugador* banca = new Jugador;
-    banca->nombre = "Banca";
-    repartirCartas(banca, baraja);
-
-    //se crea la instancia para el jugador
-    Jugador* jugador = new Jugador;
-    cout<<endl<<"Ingresa tu nombre: "<<endl;
-    cin>>jugador->nombre;
-
-
-
-   
-
+    srand(time(0));
+    Jugador jugador, banca;
+    cout<<"¦¦¦¦¦¦+ ¦¦+      ¦¦¦¦¦+  ¦¦¦¦¦¦+¦¦+  ¦¦+     ¦¦+ ¦¦¦¦¦+  ¦¦¦¦¦¦+¦¦+  ¦¦+"<<endl;
+    cout<<"¦¦+--¦¦+¦¦¦     ¦¦+--¦¦+¦¦+----+¦¦¦ ¦¦++     ¦¦¦¦¦+--¦¦+¦¦+----+¦¦¦ ¦¦++"<<endl;
+    cout<<"¦¦¦¦¦¦++¦¦¦     ¦¦¦¦¦¦¦¦¦¦¦     ¦¦¦¦¦++      ¦¦¦¦¦¦¦¦¦¦¦¦¦¦     ¦¦¦¦¦++ "<<endl;
+    cout<<"¦¦+--¦¦+¦¦¦     ¦¦+--¦¦¦¦¦¦     ¦¦+-¦¦+ ¦¦   ¦¦¦¦¦+--¦¦¦¦¦¦     ¦¦+-¦¦+ "<<endl;
+    cout<<"¦¦¦¦¦¦++¦¦¦¦¦¦¦+¦¦¦  ¦¦¦+¦¦¦¦¦¦+¦¦¦  ¦¦++¦¦¦¦¦++¦¦¦  ¦¦¦+¦¦¦¦¦¦+¦¦¦  ¦¦+"<<endl;
+    cout<<"+-----+ +------++-+  +-+ +-----++-+  +-+ +----+ +-+  +-+ +-----++-+  +-+"<<endl;
+    char nombre[50];
+    cout<<endl;
+    cout<<"======================================================================="<<endl;
+    cout<<"||"<< "nombre: ";
+    cin.getline(nombre, 50);
+    crearJugador(&jugador, nombre);
+    crearJugador(&banca, (char*)"Banca");
+    cout<<endl<<"tu turno:"<<endl;
+    turnoJugador(&jugador);
 }
 
-Carta* crearBaraja(){
-    //declaramos el arreglo que almacenara la baraja
-    Carta* baraja = new Carta[52];
+void crearJugador(Jugador* jugador, const char* nombre){
+    jugador->total = 0;
+    jugador->numDeCar = 0;
+    jugador->juego = (Carta*) malloc(10 * sizeof(Carta));
 
-    for(int i=0; i<4; i++){
-        int contador=2;
-        
-        
-        for(int j=0; j<13;j++){
-            //indice para recorrer las 52 cartas
-            int indice = i*13+j;
-            switch(i){
-                case 0:
-                    baraja[indice].palo = CORAZONES;
-                    break;
-                case 1:
-                    baraja[indice].palo = DIAMANTES;
-                    break;
-                case 2:
-                    baraja[indice].palo = TREBOLES;
-                    break;
-                case 3:
-                    baraja[indice].palo = PICAS;
-                    break;
-            }
-            if(contador>=2 && contador<=10){
-                baraja[indice].valor = contador;
-                //pasamos el valor int al nombre con int to ASCII (itoa)
-                baraja[indice].nombre = to_string(contador);
-                contador++;
-            }else if(contador==11){
-                baraja[indice].valor = 10;
-                baraja[indice].nombre = "J";
-                contador++;
-            }else if(contador==12){
-                baraja[indice].valor = 10;
-                baraja[indice].nombre = "Q";
-                contador++;
-            }else if(contador==13){
-                baraja[indice].valor = 10;
-                baraja[indice].nombre = "K";
-                contador++;
-            }else if(contador==14){
-                baraja[indice].valor = 11;
-                baraja[indice].nombre = "A";
-                contador++;
-            }
-        }   
-    }
+    strncpy(jugador->nombre, nombre, sizeof(jugador->nombre) - 1);
+    jugador->nombre[sizeof(jugador->nombre) - 1] = '\0';
 
-    return baraja;
-}
-
-void revolverBaraja(Carta* baraja){
-    
-
-    for (int i = 51; i > 0; --i) {
-        int j = rand() % (i + 1);
-        // intercambiar
-        Carta temp = baraja[i];
-        baraja[i] = baraja[j];
-        baraja[j] = temp;
+    for (int i = 0; i < 1; i++) {
+        Carta carta = generarCarta(jugador);
+        agregarCarta(jugador, carta); 
     }
 }
-
-void repartirCartas(Jugador* jugador, Carta* baraja){
-    int cartaBaraja = 0;
-
-    jugador->manoJugador = new Carta[2];
-
-    for(int i=0; i<2; i++){
-        cartaBaraja = rand()%sizeof(baraja);
-        //pasar una carta de la baraja a la mano del jugador
-        jugador->manoJugador[i] = baraja[cartaBaraja];
-        
-    }
+int valorCarta(const char* valor, Jugador* jugador){
+    if (strcmp(valor, "A") == 0){
+        if(jugador->total<10||jugador->numDeCar<=2){
+            return 1;
+        }else{
+            return 11;
+        }
+    } 
+    if (strcmp(valor, "J") == 0 || strcmp(valor, "Q") == 0 || strcmp(valor, "K") == 0) return 10;
+    return atoi(valor);
 }
 
-
-
-
-
-
-
-
-
-
-
-
+Carta generarCarta(Jugador* jugador){
+    const char* figuras[]= {"Corazon", "Diamante", "Trebol", "Pica"};
+    const char* valores[]= {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
+    Carta carta;
+    strncpy(carta.figura, figuras[rand() % 4], 10);
+    strncpy(carta.valor, valores[rand() % 13], 2);
+    carta.puntos = valorCarta(carta.valor, jugador);
+    return carta;
+}
+void agregarCarta(Jugador* jugador, Carta carta){
+    jugador->juego[jugador->numDeCar] = carta;
+    jugador->total += carta.puntos;
+    jugador->numDeCar++;
+}
+void mostrarMano(Jugador* jugador){
+    cout<<"juego de"<<endl;
+    cout << jugador->nombre << ": ";
+    for (int i = 0; i < jugador->numDeCar; i++){
+        cout<<"["<<jugador->juego[i].valor<<" | "<<jugador->juego[i].figura<<"]"<<"   ";
+    }
+    cout<<endl;
+    cout<<"total: "<<jugador->total<<endl;
+}
+void turnoJugador(Jugador* jugador){
+    char op;
+    do{
+        Carta c = generarCarta(jugador);
+        agregarCarta(jugador, c);
+        mostrarMano(jugador);
+        if (jugador->total > 21){
+            cout << "perdisteeeee jajajajajajaja"<<endl;
+            return;
+        }else{
+            cout << "otra? |s/n|  ";
+            cin >> op;
+        }
+    }while(op == 's');
+}
