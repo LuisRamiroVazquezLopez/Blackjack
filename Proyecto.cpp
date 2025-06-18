@@ -22,17 +22,18 @@ int valorCarta(const char* valor, Jugador* jugador);
 Carta generarCarta(Jugador* jugador);
 void agregarCarta(Jugador* jugador, Carta carta);
 void mostrarMano(Jugador* jugador);
-void turnoJugador(Jugador* jugador);
+void turnoJugador(Jugador* jugador, Jugador* banca);
+void turnoBanca(Jugador* banca, Jugador* jugador);
 
 int main(){
     srand(time(0));
     Jugador jugador, banca;
-    cout<<"¦¦¦¦¦¦+ ¦¦+      ¦¦¦¦¦+  ¦¦¦¦¦¦+¦¦+  ¦¦+     ¦¦+ ¦¦¦¦¦+  ¦¦¦¦¦¦+¦¦+  ¦¦+"<<endl;
-    cout<<"¦¦+--¦¦+¦¦¦     ¦¦+--¦¦+¦¦+----+¦¦¦ ¦¦++     ¦¦¦¦¦+--¦¦+¦¦+----+¦¦¦ ¦¦++"<<endl;
-    cout<<"¦¦¦¦¦¦++¦¦¦     ¦¦¦¦¦¦¦¦¦¦¦     ¦¦¦¦¦++      ¦¦¦¦¦¦¦¦¦¦¦¦¦¦     ¦¦¦¦¦++ "<<endl;
-    cout<<"¦¦+--¦¦+¦¦¦     ¦¦+--¦¦¦¦¦¦     ¦¦+-¦¦+ ¦¦   ¦¦¦¦¦+--¦¦¦¦¦¦     ¦¦+-¦¦+ "<<endl;
-    cout<<"¦¦¦¦¦¦++¦¦¦¦¦¦¦+¦¦¦  ¦¦¦+¦¦¦¦¦¦+¦¦¦  ¦¦++¦¦¦¦¦++¦¦¦  ¦¦¦+¦¦¦¦¦¦+¦¦¦  ¦¦+"<<endl;
-    cout<<"+-----+ +------++-+  +-+ +-----++-+  +-+ +----+ +-+  +-+ +-----++-+  +-+"<<endl;
+    cout<<"â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•— â–ˆâ–ˆâ•—      â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•—  â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•—â–ˆâ–ˆâ•—  â–ˆâ–ˆâ•—     â–ˆâ–ˆâ•— â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•—  â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•—â–ˆâ–ˆâ•—  â–ˆâ–ˆâ•—"<<endl;
+    cout<<"â–ˆâ–ˆâ•”â•â•â–ˆâ–ˆâ•—â–ˆâ–ˆâ•‘     â–ˆâ–ˆâ•”â•â•â–ˆâ–ˆâ•—â–ˆâ–ˆâ•”â•â•â•â•â•â–ˆâ–ˆâ•‘ â–ˆâ–ˆâ•”â•     â–ˆâ–ˆâ•‘â–ˆâ–ˆâ•”â•â•â–ˆâ–ˆâ•—â–ˆâ–ˆâ•”â•â•â•â•â•â–ˆâ–ˆâ•‘ â–ˆâ–ˆâ•”â•"<<endl;
+    cout<<"â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•”â•â–ˆâ–ˆâ•‘     â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•‘â–ˆâ–ˆâ•‘     â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•”â•      â–ˆâ–ˆâ•‘â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•‘â–ˆâ–ˆâ•‘     â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•”â• "<<endl;
+    cout<<"â–ˆâ–ˆâ•”â•â•â–ˆâ–ˆâ•—â–ˆâ–ˆâ•‘     â–ˆâ–ˆâ•”â•â•â–ˆâ–ˆâ•‘â–ˆâ–ˆâ•‘     â–ˆâ–ˆâ•”â•â–ˆâ–ˆâ•— â–ˆâ–ˆ   â–ˆâ–ˆâ•‘â–ˆâ–ˆâ•”â•â•â–ˆâ–ˆâ•‘â–ˆâ–ˆâ•‘     â–ˆâ–ˆâ•”â•â–ˆâ–ˆâ•— "<<endl;
+    cout<<"â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•”â•â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•—â–ˆâ–ˆâ•‘  â–ˆâ–ˆâ•‘â•šâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•—â–ˆâ–ˆâ•‘  â–ˆâ–ˆâ•—â•šâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•”â•â–ˆâ–ˆâ•‘  â–ˆâ–ˆâ•‘â•šâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•—â–ˆâ–ˆâ•‘  â–ˆâ–ˆâ•—"<<endl;
+    cout<<"â•šâ•â•â•â•â•â• â•šâ•â•â•â•â•â•â•â•šâ•â•  â•šâ•â• â•šâ•â•â•â•â•â•â•šâ•â•  â•šâ•â• â•šâ•â•â•â•â• â•šâ•â•  â•šâ•â• â•šâ•â•â•â•â•â•â•šâ•â•  â•šâ•â•"<<endl;
     char nombre[50];
     cout<<endl;
     cout<<"======================================================================="<<endl;
@@ -41,7 +42,7 @@ int main(){
     crearJugador(&jugador, nombre);
     crearJugador(&banca, (char*)"Banca");
     cout<<endl<<"tu turno:"<<endl;
-    turnoJugador(&jugador);
+    turnoJugador(&jugador, &banca);
 }
 
 void crearJugador(Jugador* jugador, const char* nombre){
@@ -92,9 +93,11 @@ void mostrarMano(Jugador* jugador){
     cout<<endl;
     cout<<"total: "<<jugador->total<<endl;
 }
-void turnoJugador(Jugador* jugador){
+void turnoJugador(Jugador* jugador, Jugador* banca){
     char op;
     do{
+        cout << "\nTurno de la banca:" << endl;
+        turnoBanca(banca, jugador);
         Carta c = generarCarta(jugador);
         agregarCarta(jugador, c);
         mostrarMano(jugador);
@@ -106,4 +109,11 @@ void turnoJugador(Jugador* jugador){
             cin >> op;
         }
     }while(op == 's');
+}
+void turnoBanca(Jugador* banca, Jugador* jugador) {
+    while (banca->total < 17) {
+        Carta c = generarCarta(jugador);
+        agregarCarta(banca, c);
+    }
+    mostrarMano(banca);
 }
