@@ -24,6 +24,8 @@ void agregarCarta(Jugador* jugador, Carta carta);
 void mostrarMano(Jugador* jugador);
 void turnoJugador(Jugador* jugador, Jugador* banca);
 void turnoBanca(Jugador* banca, Jugador* jugador);
+void Ganador(Jugador* jugador, Jugador* banca);
+void liberarMemoria(Jugador* jugador);
 
 int main(){
     srand(time(0));
@@ -35,14 +37,29 @@ int main(){
     cout<<"██████╔╝███████╗██║  ██║╚██████╗██║  ██╗╚█████╔╝██║  ██║╚██████╗██║  ██╗"<<endl;
     cout<<"╚═════╝ ╚══════╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝ ╚════╝ ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝"<<endl;
     char nombre[50];
-    cout<<endl;
-    cout<<"======================================================================="<<endl;
-    cout<<"||"<< "nombre: ";
+    cout<<endl<<endl;
+    cout<<"╔═════════════════════════════════════════════════════════════════════╗"<<endl;
+    cout<<"║"<< "nombre: ";
     cin.getline(nombre, 50);
+    cout<<"╚═════════════════════════════════════════════════════════════════════╝"<<endl;
+    cout<<endl<<endl;
+    cout<<"╔═╗ ╦ ╦╔═╗  ╔═╗╔═╗╔╦╗╦╔═╗╔╗╔╔═╗╔═╗  ╔═╗╦     ╦╦ ╦╔═╗╔═╗╔═╗"<<endl;
+    cout<<"║═╬╗║ ║║╣   ║  ║ ║║║║║║╣ ║║║║  ║╣   ║╣ ║     ║║ ║║╣ ║ ╦║ ║"<<endl;
+    cout<<"╚═╝╚╚═╝╚═╝  ╚═╝╚═╝╩ ╩╩╚═╝╝╚╝╚═╝╚═╝  ╚═╝╩═╝  ╚╝╚═╝╚═╝╚═╝╚═╝"<<endl;
+    cout<<endl<<endl;
     crearJugador(&jugador, nombre);
     crearJugador(&banca, (char*)"Banca");
-    cout<<endl<<"tu turno:"<<endl;
     turnoJugador(&jugador, &banca);
+    cout<<"═════════════════════════════════════════════════════════════════════"<<endl;
+    cout<<"╔═╗╦  ╔═╗╔═╗╦╔═╗╦╔═╗╔═╗╔═╗╦╔═╗╔╗╔"<<endl;
+    cout<<"║  ║  ╠═╣╚═╗║╠╣ ║║  ╠═╣║  ║║ ║║║║"<<endl;
+    cout<<"╚═╝╩═╝╩ ╩╚═╝╩╚  ╩╚═╝╩ ╩╚═╝╩╚═╝╝╚╝"<<endl;
+    mostrarMano(&jugador);
+    mostrarMano(&banca);
+    Ganador(&jugador, &banca);
+
+    liberarMemoria(&jugador);
+    liberarMemoria(&banca);
 }
 
 void crearJugador(Jugador* jugador, const char* nombre){
@@ -85,8 +102,8 @@ void agregarCarta(Jugador* jugador, Carta carta){
     jugador->numDeCar++;
 }
 void mostrarMano(Jugador* jugador){
-    cout<<"juego de"<<endl;
-    cout << jugador->nombre << ": ";
+    cout<<"juego de"<<" ";
+    cout << jugador->nombre << ": "<<endl;
     for (int i = 0; i < jugador->numDeCar; i++){
         cout<<"["<<jugador->juego[i].valor<<" | "<<jugador->juego[i].figura<<"]"<<"   ";
     }
@@ -96,13 +113,11 @@ void mostrarMano(Jugador* jugador){
 void turnoJugador(Jugador* jugador, Jugador* banca){
     char op;
     do{
-        cout << "\nTurno de la banca:" << endl;
         turnoBanca(banca, jugador);
         Carta c = generarCarta(jugador);
         agregarCarta(jugador, c);
         mostrarMano(jugador);
         if (jugador->total > 21){
-            cout << "perdisteeeee jajajajajajaja"<<endl;
             return;
         }else{
             cout << "otra? |s/n|  ";
@@ -110,10 +125,41 @@ void turnoJugador(Jugador* jugador, Jugador* banca){
         }
     }while(op == 's');
 }
-void turnoBanca(Jugador* banca, Jugador* jugador) {
-    while (banca->total < 17) {
+void turnoBanca(Jugador* banca, Jugador* jugador){
+    if (banca->total < 17)
+    {
         Carta c = generarCarta(jugador);
         agregarCarta(banca, c);
     }
     mostrarMano(banca);
+}
+void Ganador(Jugador* jugador, Jugador* banca){
+    cout<<endl;
+    if(jugador->total >21){
+        cout<<"╔═╗╔═╗╦═╗╔╦╗╦╔═╗╔╦╗╔═╗"<<endl;
+        cout<<"╠═╝║╣ ╠╦╝ ║║║╚═╗ ║ ║╣ "<<endl;
+        cout<<"╩  ╚═╝╩╚══╩╝╩╚═╝ ╩ ╚═╝"<<endl;
+    }else if(banca->total>21){
+        cout<<"╔═╗╔═╗╔╗╔╔═╗╔═╗╔╦╗╔═╗╔═╗╔═╗"<<endl;
+        cout<<"║ ╦╠═╣║║║╠═╣╚═╗ ║ ║╣ ║╣ ║╣ "<<endl;
+        cout<<"╚═╝╩ ╩╝╚╝╩ ╩╚═╝ ╩ ╚═╝╚═╝╚═╝"<<endl;
+    }else if(jugador->total>banca->total){
+        cout<<"╔═╗╔═╗╔╗╔╔═╗╔═╗╔╦╗╔═╗╔═╗╔═╗"<<endl;
+        cout<<"║ ╦╠═╣║║║╠═╣╚═╗ ║ ║╣ ║╣ ║╣ "<<endl;
+        cout<<"╚═╝╩ ╩╝╚╝╩ ╩╚═╝ ╩ ╚═╝╚═╝╚═╝"<<endl;
+    }else if(jugador->total==banca->total){
+        cout<<"╔═╗╔╦╗╔═╗╔═╗╔╦╗╔═╗   ╔═╗╔═╗╔╗╔╔═╗  ╔╗ ╔═╗╔╗╔╔═╗╔═╗"<<endl;
+        cout<<"║╣ ║║║╠═╝╠═╣ ║ ║╣    ║ ╦╠═╣║║║╠═╣  ╠╩╗╠═╣║║║║  ╠═╣"<<endl;
+        cout<<"╚═╝╩ ╩╩  ╩ ╩ ╩ ╚═╝┘  ╚═╝╩ ╩╝╚╝╩ ╩  ╚═╝╩ ╩╝╚╝╚═╝╩ ╩"<<endl;
+    }else{
+        cout<<"╔═╗╔═╗╦═╗╔╦╗╦╔═╗╔╦╗╔═╗"<<endl;
+        cout<<"╠═╝║╣ ╠╦╝ ║║║╚═╗ ║ ║╣ "<<endl;
+        cout<<"╩  ╚═╝╩╚══╩╝╩╚═╝ ╩ ╚═╝"<<endl;
+    }
+}
+void liberarMemoria(Jugador* jugador){
+    free(jugador->juego);
+    jugador->juego = NULL;
+    jugador->numDeCar = 0;
+    jugador->total = 0;
 }
